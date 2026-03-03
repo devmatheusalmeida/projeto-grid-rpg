@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ArcaneBoard</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+    <div class="container">
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <h2>🎲 ArcaneBoard</h2>
+
+            <div class="section">
+                <label>Terreno:</label>
+                <select id="terrainSelect">
+                    <option value="floresta">Floresta</option>
+                    <option value="dungeon">Dungeon</option>
+                    <option value="cidade">Cidade</option>
+                </select>
+            </div>
+
+            <div class="section">
+                <label>Momento:</label>
+                <select id="moodSelect">
+                    <option value="calmo">Calmo</option>
+                    <option value="batalha">Batalha</option>
+                    <option value="tenso">Tenso</option>
+                </select>
+
+                <button id="playBtn">▶️ Play</button>
+                <button id="pauseBtn">⏸ Pause</button>
+                <div class="section">
+                    <label for="volumeControl">Volume:</label>
+                    <input type="range" id="volumeControl" min="0" max="1" step="0.01" value="0.6">
+                </div>
+            </div>
+
+            <button id="playMusic">Tocar Música</button>
+        </aside>
+
+        <!-- Área do mapa -->
+        <main class="map-area">
+            <div class="grid" id="grid"></div>
+        </main>
+
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
