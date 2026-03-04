@@ -5,13 +5,37 @@ const mapArea = document.querySelector(".map-area");
 const playBtn = document.getElementById("playBtn");
 const pauseBtn = document.getElementById("pauseBtn");
 const volumeControl = document.getElementById("volumeControl");
+const playerSelect = document.getElementById("playerSelect");
+const players = {
+  player1: { name: "P1", color: "#00ff95", position: null },
+  player2: { name: "P2", color: "#ff4757", position: null },
+  player3: { name: "P3", color: "#1e90ff", position: null }
+};
 
 // Criar grid com clique
 for (let i = 0; i < 400; i++) {
   const cell = document.createElement("div");
 
   cell.addEventListener("click", () => {
-    cell.classList.toggle("active");
+    const currentPlayer = playerSelect.value;
+
+    // Remove token antigo do jogador
+    if (players[currentPlayer].position !== null) {
+      const oldCell = grid.children[players[currentPlayer].position];
+      oldCell.innerHTML = "";
+    }
+
+    // Atualiza posição
+    players[currentPlayer].position = i;
+
+    // Criar token
+    const token = document.createElement("div");
+    token.classList.add("token");
+    token.textContent = players[currentPlayer].name;
+    token.style.backgroundColor = players[currentPlayer].color;
+
+    cell.innerHTML = "";
+    cell.appendChild(token);
   });
 
   grid.appendChild(cell);
