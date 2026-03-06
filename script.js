@@ -6,29 +6,30 @@ const grid = document.getElementById("grid");
 const terrainSelect = document.getElementById("terrainSelect");
 const moodSelect = document.getElementById("moodSelect");
 const mapArea = document.querySelector(".map-area");
-
 const playBtn = document.getElementById("playBtn");
 const pauseBtn = document.getElementById("pauseBtn");
 const volumeControl = document.getElementById("volumeControl");
-
 const playerSelect = document.getElementById("playerSelect");
-
 const toggleBtn = document.getElementById("toggleSidebar");
 const showSidebarBtn = document.getElementById("showSidebarBtn");
-
 const weatherSelect = document.getElementById("weatherSelect");
-
 
 // =========================
 // SISTEMA DE JOGADORES
 // =========================
 
 const players = {
-  player1: { name: "P1", color: "#00ff95", position: null },
-  player2: { name: "P2", color: "#ff4757", position: null },
-  player3: { name: "P3", color: "#1e90ff", position: null }
+player1: { name: "P1", color: "#00ff95", position: null },
+player2: { name: "P2", color: "#ff4757", position: null },
+player3: { name: "P3", color: "#1e90ff", position: null },
+player4: { name: "P4", color: "#ffa502", position: null },
+player5: { name: "P5", color: "#a55eea", position: null },
+player6: { name: "P6", color: "#2ed573", position: null },
+player7: { name: "P7", color: "#ff6b81", position: null },
+player8: { name: "P8", color: "#70a1ff", position: null },
+player9: { name: "P9", color: "#ff9f43", position: null },
+player10: { name: "P10", color: "#5352ed", position: null }
 };
-
 
 // =========================
 // CRIAR GRID
@@ -36,78 +37,100 @@ const players = {
 
 for (let i = 0; i < 400; i++) {
 
-  const cell = document.createElement("div");
-  cell.dataset.index = i;
+const cell = document.createElement("div");
 
-  cell.addEventListener("click", () => {
+cell.addEventListener("click", () => {
 
-    const currentPlayer = playerSelect.value;
+const currentPlayer = playerSelect.value;
 
-    // Remove token antigo
-    if (players[currentPlayer].position !== null) {
-      const oldCell = grid.children[players[currentPlayer].position];
-      oldCell.innerHTML = "";
-    }
+// remover player se clicar na mesma posição
+if (players[currentPlayer].position === i) {
+cell.innerHTML = "";
+players[currentPlayer].position = null;
+return;
+}
 
-    // Atualiza posição
-    players[currentPlayer].position = i;
+// remover posição antiga
+if (players[currentPlayer].position !== null) {
 
-    // Criar token
-    const token = document.createElement("div");
-    token.classList.add("token");
-    token.textContent = players[currentPlayer].name;
-    token.style.backgroundColor = players[currentPlayer].color;
-
-    cell.innerHTML = "";
-    cell.appendChild(token);
-
-  });
-
-  grid.appendChild(cell);
+const oldCell = grid.children[players[currentPlayer].position];
+oldCell.innerHTML = "";
 
 }
 
+players[currentPlayer].position = i;
+
+const token = document.createElement("div");
+
+token.classList.add("token");
+token.textContent = players[currentPlayer].name;
+token.style.backgroundColor = players[currentPlayer].color;
+
+cell.innerHTML = "";
+cell.appendChild(token);
+
+});
+
+grid.appendChild(cell);
+
+}
 
 // =========================
 // SISTEMA DE MAPAS
 // =========================
 
 const maps = {
-  floresta: "assets/maps/floresta.jpg",
-  dungeon: "assets/maps/dungeon.jpg",
-  cidade: "assets/maps/cidade.jpg"
+
+floresta: "assets/maps/floresta.jpg",
+dungeon: "assets/maps/dungeon.jpg",
+cidade: "assets/maps/cidade.jpg"
+
 };
 
-
 // =========================
-// SISTEMA DE SOM
+// SISTEMA DE SOM AMBIENTE
 // =========================
 
 const sounds = {
 
-  floresta: {
-    calmo: "assets/sounds/floresta-calmo.mp3",
-    batalha: "assets/sounds/floresta-batalha.mp3",
-    tenso: "assets/sounds/floresta-tenso.mp3"
-  },
+floresta: {
+calmo: "assets/sounds/floresta-calmo.mp3",
+batalha: "assets/sounds/floresta-batalha.mp3",
+tenso: "assets/sounds/floresta-tenso.mp3"
+},
 
-  dungeon: {
-    calmo: "assets/sounds/dungeon-calmo.mp3",
-    batalha: "assets/sounds/dungeon-batalha.mp3",
-    tenso: "assets/sounds/dungeon-tenso.mp3"
-  },
+dungeon: {
+calmo: "assets/sounds/dungeon-calmo.mp3",
+batalha: "assets/sounds/dungeon-batalha.mp3",
+tenso: "assets/sounds/dungeon-tenso.mp3"
+},
 
-  cidade: {
-    calmo: "assets/sounds/cidade-calmo.mp3",
-    batalha: "assets/sounds/cidade-batalha.mp3",
-    tenso: "assets/sounds/cidade-tenso.mp3"
-  }
+cidade: {
+calmo: "assets/sounds/cidade-calmo.mp3",
+batalha: "assets/sounds/cidade-batalha.mp3",
+tenso: "assets/sounds/cidade-tenso.mp3"
+}
 
 };
 
 let currentAudio = null;
 let currentSoundFile = null;
 
+// =========================
+// SISTEMA DE CLIMA
+// =========================
+
+const weatherSounds = {
+
+rain: "assets/sounds/weather/rain.mp3",
+storm: "assets/sounds/weather/storm.mp3",
+snow: "assets/sounds/weather/snow.mp3",
+sandstorm: "assets/sounds/weather/sandstorm.mp3",
+wind: "assets/sounds/weather/wind.mp3"
+
+};
+
+let currentWeatherAudio = null;
 
 // =========================
 // CONTROLE DE VOLUME
@@ -115,13 +138,13 @@ let currentSoundFile = null;
 
 volumeControl.addEventListener("input", () => {
 
-  if (currentAudio) {
-    currentAudio.volume = volumeControl.value;
-  }
+if (currentAudio) {
+currentAudio.volume = volumeControl.value;
+}
 
-  if (currentWeatherAudio) {
-    currentWeatherAudio.volume = volumeControl.value;
-  }
+if (currentWeatherAudio) {
+currentWeatherAudio.volume = volumeControl.value;
+}
 
 });
 
@@ -134,33 +157,30 @@ moodSelect.addEventListener("change", updateEnvironment);
 
 function updateEnvironment() {
 
-  const selectedTerrain = terrainSelect.value;
-  const selectedMood = moodSelect.value;
+const selectedTerrain = terrainSelect.value;
+const selectedMood = moodSelect.value;
 
-  // Atualizar mapa
-  mapArea.style.backgroundImage = `url(${maps[selectedTerrain]})`;
+mapArea.style.backgroundImage = `url(${maps[selectedTerrain]})`;
 
-  // Selecionar som
-  const soundFile = sounds[selectedTerrain][selectedMood];
+const soundFile = sounds[selectedTerrain][selectedMood];
 
-  // Evitar recriar o mesmo áudio
-  if (currentSoundFile !== soundFile) {
+if (currentSoundFile !== soundFile) {
 
-    if (currentAudio) {
-      currentAudio.pause();
-      currentAudio.currentTime = 0;
-    }
+if (currentAudio) {
+currentAudio.pause();
+currentAudio.currentTime = 0;
+}
 
-    currentAudio = new Audio(soundFile);
-    currentAudio.loop = true;
-    currentAudio.volume = volumeControl.value;
+currentAudio = new Audio(soundFile);
 
-    currentSoundFile = soundFile;
+currentAudio.loop = true;
+currentAudio.volume = volumeControl.value;
 
-  }
+currentSoundFile = soundFile;
 
 }
 
+}
 
 // =========================
 // CONTROLES DE AUDIO
@@ -168,28 +188,17 @@ function updateEnvironment() {
 
 playBtn.addEventListener("click", () => {
 
-  if (currentAudio) {
-    currentAudio.play();
-  }
-
-  if (currentWeatherAudio) {
-    currentWeatherAudio.play();
-  }
+if (currentAudio) currentAudio.play();
+if (currentWeatherAudio) currentWeatherAudio.play();
 
 });
 
 pauseBtn.addEventListener("click", () => {
 
-  if (currentAudio) {
-    currentAudio.pause();
-  }
-
-  if (currentWeatherAudio) {
-    currentWeatherAudio.pause();
-  }
+if (currentAudio) currentAudio.pause();
+if (currentWeatherAudio) currentWeatherAudio.pause();
 
 });
-
 
 // =========================
 // CONTROLE DO SIDEBAR
@@ -197,22 +206,19 @@ pauseBtn.addEventListener("click", () => {
 
 toggleBtn.addEventListener("click", () => {
 
-  document.body.classList.add("hidden-sidebar");
+document.body.classList.add("hidden-sidebar");
 
 });
 
 showSidebarBtn.addEventListener("click", () => {
 
-  document.body.classList.remove("hidden-sidebar");
+document.body.classList.remove("hidden-sidebar");
 
 });
 
-
 // =========================
-// INICIALIZAÇÃO
+// SISTEMA DE INICIATIVA
 // =========================
-
-updateEnvironment();
 
 const initiativeName = document.getElementById("initiativeName");
 const initiativeValue = document.getElementById("initiativeValue");
@@ -225,54 +231,53 @@ let currentTurn = 0;
 
 addInitiativeBtn.addEventListener("click", () => {
 
-  const name = initiativeName.value;
-  const value = Number(initiativeValue.value);
+const name = initiativeName.value;
+const value = Number(initiativeValue.value);
 
-  if (!name || !value) return;
+if (!name || !value) return;
 
-  initiativeOrder.push({ name, value });
+initiativeOrder.push({ name, value });
 
-  // ordenar iniciativa
-  initiativeOrder.sort((a, b) => b.value - a.value);
+initiativeOrder.sort((a, b) => b.value - a.value);
 
-  renderInitiative();
+renderInitiative();
 
-  initiativeName.value = "";
-  initiativeValue.value = "";
+initiativeName.value = "";
+initiativeValue.value = "";
 
 });
 
 function renderInitiative() {
 
-  initiativeList.innerHTML = "";
+initiativeList.innerHTML = "";
 
-  initiativeOrder.forEach((char, index) => {
+initiativeOrder.forEach((char, index) => {
 
-    const li = document.createElement("li");
+const li = document.createElement("li");
 
-    if (index === currentTurn) {
-      li.style.background = "#6b46c1";
-    }
+if (index === currentTurn) {
+li.style.background = "#6b46c1";
+}
 
-    li.textContent = `${char.name} - ${char.value}`;
+li.textContent = `${char.name} - ${char.value}`;
 
-    initiativeList.appendChild(li);
+initiativeList.appendChild(li);
 
-  });
+});
 
 }
 
 nextTurnBtn.addEventListener("click", () => {
 
-  if (initiativeOrder.length === 0) return;
+if (initiativeOrder.length === 0) return;
 
-  currentTurn++;
+currentTurn++;
 
-  if (currentTurn >= initiativeOrder.length) {
-    currentTurn = 0;
-  }
+if (currentTurn >= initiativeOrder.length) {
+currentTurn = 0;
+}
 
-  renderInitiative();
+renderInitiative();
 
 });
 
@@ -280,32 +285,37 @@ nextTurnBtn.addEventListener("click", () => {
 // SISTEMA DE CLIMA
 // =========================
 
-const weatherSounds = {
-  rain: "assets/sounds/weather/rain.mp3",
-  storm: "assets/sounds/weather/storm.mp3",
-  snow: "assets/sounds/weather/snow.mp3",
-  sandstorm: "assets/sounds/weather/sandstorm.mp3",
-  wind: "assets/sounds/weather/wind.mp3"
-};
-
-let currentWeatherAudio = null;
-
 weatherSelect.addEventListener("change", updateWeather);
 
 function updateWeather() {
 
-  const selectedWeather = weatherSelect.value;
+const selectedWeather = weatherSelect.value;
 
-  if (currentWeatherAudio) {
-    currentWeatherAudio.pause();
-    currentWeatherAudio.currentTime = 0;
-  }
+if (currentWeatherAudio) {
 
-  if (selectedWeather === "none") return;
+currentWeatherAudio.pause();
+currentWeatherAudio.currentTime = 0;
 
-  currentWeatherAudio = new Audio(weatherSounds[selectedWeather]);
-  currentWeatherAudio.loop = true;
-  currentWeatherAudio.volume = 0.5;
-
-  currentWeatherAudio.play();
 }
+
+if (selectedWeather === "none") {
+
+currentWeatherAudio = null;
+return;
+
+}
+
+currentWeatherAudio = new Audio(weatherSounds[selectedWeather]);
+
+currentWeatherAudio.loop = true;
+currentWeatherAudio.volume = volumeControl.value;
+
+currentWeatherAudio.play();
+
+}
+
+// =========================
+// INICIALIZAÇÃO
+// =========================
+
+updateEnvironment();

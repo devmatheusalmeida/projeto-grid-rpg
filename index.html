@@ -1,96 +1,128 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ArcaneBoard</title>
-    <link rel="stylesheet" href="style.css" />
+<meta charset="UTF-8">
+<title>ArcaneBoard</title>
+<link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-    <div class="container">
+<button id="showSidebarBtn">☰</button>
 
-        <!-- Sidebar -->
-        <aside class="sidebar">
+<div class="container">
 
-            <button id="toggleSidebar">Modo Mesa</button>
+<!-- SIDEBAR -->
+<div class="sidebar">
 
-            <h2>🎲 ArcaneBoard</h2>
+<h2>ArcaneBoard</h2>
 
-            <div class="section">
-                <h3>Iniciativa</h3>
+<button id="toggleSidebar">Ocultar painel</button>
 
-                <input id="initiativeName" placeholder="Nome do personagem">
-                <input id="initiativeValue" type="number" placeholder="Valor da iniciativa">
+<!-- PLAYERS -->
+<div class="sidebar-divider">🧙 PLAYERS</div>
 
-                <button id="addInitiative">Adicionar</button>
+<div class="section">
+<label>Selecionar Player</label>
+<select id="playerSelect">
 
-                <ul id="initiativeList"></ul>
+<option value="player1">Player 1</option>
+<option value="player2">Player 2</option>
+<option value="player3">Player 3</option>
+<option value="player4">Player 4</option>
+<option value="player5">Player 5</option>
+<option value="player6">Player 6</option>
+<option value="player7">Player 7</option>
+<option value="player8">Player 8</option>
+<option value="player9">Player 9</option>
+<option value="player10">Player 10</option>
 
-                <button id="nextTurn">Próximo Turno</button>
-            </div>
+</select>
+</div>
 
-            <div class="section">
-                <label>Jogador Ativo:</label>
-                <select id="playerSelect">
-                    <option value="player1">Player 1</option>
-                    <option value="player2">Player 2</option>
-                    <option value="player3">Player 3</option>
-                </select>
-            </div>
+<!-- INICIATIVA -->
+<div class="sidebar-divider">⚔ INICIATIVA</div>
 
-            <div class="section">
-                <label>Terreno:</label>
-                <select id="terrainSelect">
-                    <option value="floresta">Floresta</option>
-                    <option value="dungeon">Dungeon</option>
-                    <option value="cidade">Cidade</option>
-                </select>
-            </div>
+<div class="section">
+<label>Nome</label>
+<input type="text" id="initiativeName" placeholder="Ex: Guerreiro">
+</div>
 
-            <div class="section">
-                <label>Momento:</label>
-                <select id="moodSelect">
-                    <option value="calmo">Calmo</option>
-                    <option value="batalha">Batalha</option>
-                    <option value="tenso">Tenso</option>
-                </select>
+<div class="section">
+<label>Resultado do dado</label>
+<input type="number" id="initiativeValue" placeholder="Ex: 17">
+</div>
 
-                <div class="section">
-                    <label>Clima</label>
+<div class="section">
+<button id="addInitiative">Adicionar</button>
+</div>
 
-                    <select id="weatherSelect">
-                        <option value="none">Sem clima</option>
-                        <option value="rain">Chuva</option>
-                        <option value="storm">Tempestade</option>
-                        <option value="snow">Nevasca</option>
-                        <option value="sandstorm">Tempestade de areia</option>
-                        <option value="wind">Ventania</option>
-                    </select>
-                </div>
+<div class="section">
+<ul id="initiativeList"></ul>
+</div>
 
-                <button id="playBtn">▶️ Play</button>
-                <button id="pauseBtn">⏸ Pause</button>
-                <div class="section">
-                    <label for="volumeControl">Volume:</label>
-                    <input type="range" id="volumeControl" min="0" max="1" step="0.01" value="0.6">
-                </div>
-            </div>
+<div class="section">
+<button id="nextTurn">Próximo Turno</button>
+</div>
 
-            <button id="playMusic">Tocar Música</button>
-        </aside>
+<!-- MAPA -->
+<div class="sidebar-divider">🗺 MAPA</div>
 
-        <!-- Área do mapa -->
-        <main class="map-area">
-            <button id="showSidebarBtn">Mostrar Menu</button>
-            <div class="grid" id="grid"></div>
-        </main>
+<div class="section">
+<label>Terreno</label>
+<select id="terrainSelect">
+<option value="floresta">Floresta</option>
+<option value="dungeon">Dungeon</option>
+<option value="cidade">Cidade</option>
+</select>
+</div>
 
-    </div>
+<div class="section">
+<label>Momento</label>
+<select id="moodSelect">
+<option value="calmo">Calmo</option>
+<option value="tenso">Tenso</option>
+<option value="batalha">Batalha</option>
+</select>
+</div>
 
-    <script src="script.js"></script>
+<!-- AUDIO -->
+<div class="sidebar-divider">🎵 ÁUDIO</div>
+
+<button id="playBtn">Play</button>
+<button id="pauseBtn">Pause</button>
+
+<div class="section">
+<label>Volume</label>
+<input type="range" id="volumeControl" min="0" max="1" step="0.01" value="0.5">
+</div>
+
+<!-- CLIMA -->
+<div class="sidebar-divider">🌧 CLIMA</div>
+
+<div class="section">
+<label>Efeito climático</label>
+<select id="weatherSelect">
+<option value="none">Nenhum</option>
+<option value="rain">Chuva</option>
+<option value="storm">Tempestade</option>
+<option value="snow">Nevasca</option>
+<option value="sandstorm">Tempestade de areia</option>
+<option value="wind">Ventania</option>
+</select>
+</div>
+
+</div>
+
+<!-- MAPA -->
+<div class="map-area">
+<div id="grid" class="grid"></div>
+</div>
+
+</div>
+
+<script src="script.js"></script>
+
 </body>
-
 </html>
