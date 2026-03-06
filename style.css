@@ -8,11 +8,16 @@
 body {
   background-color: #0f0f14;
   color: #fff;
+  height: 100vh;
+  overflow: hidden;
 }
+
+/* Layout principal */
 
 .container {
   display: flex;
   height: 100vh;
+  width: 100vw;
 }
 
 /* Sidebar */
@@ -22,9 +27,13 @@ body {
   background-color: #1a1a22;
   padding: 20px;
   border-right: 2px solid #2c2c3a;
+
   display: flex;
   flex-direction: column;
   gap: 20px;
+
+  height: 100%;
+  overflow-y: auto;
 }
 
 .sidebar h2 {
@@ -38,13 +47,18 @@ body {
   gap: 5px;
 }
 
-select {
+/* Inputs */
+
+select,
+input {
   padding: 8px;
   border-radius: 6px;
   border: none;
   background-color: #2c2c3a;
   color: white;
 }
+
+/* Botões */
 
 button {
   padding: 10px;
@@ -65,17 +79,16 @@ button:hover {
 .map-area {
   flex: 1;
   position: relative;
+  height: 100%;
+  overflow: hidden;
+
+  background-image: url("https://i.imgur.com/8Km9tLL.jpg");
   background-size: cover;
   background-position: center;
-}
 
-/*Mapas configurações*/
-
-.map-area {
   transition: 0.5s ease;
   filter: brightness(0.9);
 }
-
 
 /* Grid */
 
@@ -83,81 +96,46 @@ button:hover {
   display: grid;
   grid-template-columns: repeat(20, 1fr);
   grid-template-rows: repeat(20, 1fr);
+
   height: 100%;
   width: 100%;
 }
 
 .grid div {
   border: 1px solid rgba(255, 255, 255, 0.1);
+  position: relative;
 }
 
-/* Volume*/
+/* Tokens (players) */
+
+.token {
+  width: 90%;
+  height: 90%;
+  border-radius: 50%;
+  color: white;
+  font-weight: bold;
+  font-size: 12px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin: auto;
+}
+
+/* Volume */
 
 input[type="range"] {
   width: 100%;
   cursor: pointer;
 }
 
-/*criação de grid*/
-
-.grid div.active {
-  background-color: rgba(0, 255, 150, 0.6);
-  box-shadow: 0 0 12px #00ff95;
-}
-
-.token {
-  width: 80%;
-  height: 80%;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-  color: #000;
-  margin: auto;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-}
+/* Esconder sidebar */
 
 .hidden-sidebar .sidebar {
   display: none;
 }
 
 .hidden-sidebar .map-area {
-  width: 100vw;
-  height: 100vh;
-}
-
-#showSidebarBtn {
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  padding: 10px 14px;
-  border: none;
-  border-radius: 8px;
-  background-color: #6b46c1;
-  color: white;
-  cursor: pointer;
-  z-index: 999;
-  display: none;
-}
-
-#showSidebarBtn:hover {
-  background-color: #553c9a;
-}
-
-.hidden-sidebar #showSidebarBtn {
-  display: block;
-}
-
-#initiativeList {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
-
-#initiativeList li {
-  background: #2c2c3a;
-  padding: 6px;
-  border-radius: 5px;
+  width: 100%;
 }

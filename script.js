@@ -16,6 +16,8 @@ const playerSelect = document.getElementById("playerSelect");
 const toggleBtn = document.getElementById("toggleSidebar");
 const showSidebarBtn = document.getElementById("showSidebarBtn");
 
+const weatherSelect = document.getElementById("weatherSelect");
+
 
 // =========================
 // SISTEMA DE JOGADORES
@@ -117,8 +119,11 @@ volumeControl.addEventListener("input", () => {
     currentAudio.volume = volumeControl.value;
   }
 
-});
+  if (currentWeatherAudio) {
+    currentWeatherAudio.volume = volumeControl.value;
+  }
 
+});
 
 // =========================
 // ATUALIZAR AMBIENTE
@@ -167,12 +172,20 @@ playBtn.addEventListener("click", () => {
     currentAudio.play();
   }
 
+  if (currentWeatherAudio) {
+    currentWeatherAudio.play();
+  }
+
 });
 
 pauseBtn.addEventListener("click", () => {
 
   if (currentAudio) {
     currentAudio.pause();
+  }
+
+  if (currentWeatherAudio) {
+    currentWeatherAudio.pause();
   }
 
 });
@@ -262,3 +275,37 @@ nextTurnBtn.addEventListener("click", () => {
   renderInitiative();
 
 });
+
+// =========================
+// SISTEMA DE CLIMA
+// =========================
+
+const weatherSounds = {
+  rain: "assets/sounds/weather/rain.mp3",
+  storm: "assets/sounds/weather/storm.mp3",
+  snow: "assets/sounds/weather/snow.mp3",
+  sandstorm: "assets/sounds/weather/sandstorm.mp3",
+  wind: "assets/sounds/weather/wind.mp3"
+};
+
+let currentWeatherAudio = null;
+
+weatherSelect.addEventListener("change", updateWeather);
+
+function updateWeather() {
+
+  const selectedWeather = weatherSelect.value;
+
+  if (currentWeatherAudio) {
+    currentWeatherAudio.pause();
+    currentWeatherAudio.currentTime = 0;
+  }
+
+  if (selectedWeather === "none") return;
+
+  currentWeatherAudio = new Audio(weatherSounds[selectedWeather]);
+  currentWeatherAudio.loop = true;
+  currentWeatherAudio.volume = 0.5;
+
+  currentWeatherAudio.play();
+}
