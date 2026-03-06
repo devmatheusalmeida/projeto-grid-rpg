@@ -14,7 +14,23 @@
 
         <!-- Sidebar -->
         <aside class="sidebar">
+
+            <button id="toggleSidebar">Modo Mesa</button>
+
             <h2>🎲 ArcaneBoard</h2>
+
+            <div class="section">
+                <h3>Iniciativa</h3>
+
+                <input id="initiativeName" placeholder="Nome do personagem">
+                <input id="initiativeValue" type="number" placeholder="Valor da iniciativa">
+
+                <button id="addInitiative">Adicionar</button>
+
+                <ul id="initiativeList"></ul>
+
+                <button id="nextTurn">Próximo Turno</button>
+            </div>
 
             <div class="section">
                 <label>Jogador Ativo:</label>
@@ -55,6 +71,7 @@
 
         <!-- Área do mapa -->
         <main class="map-area">
+            <button id="showSidebarBtn">Mostrar Menu</button>
             <div class="grid" id="grid"></div>
         </main>
 
