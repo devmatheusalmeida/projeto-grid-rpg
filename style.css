@@ -64,6 +64,8 @@ body {
     display: flex;
     justify-content: center;
     margin-bottom: 10px;
+    border-bottom: 1px solid #2c2c3a;
+    padding-bottom: 10px;
 }
 
 .logo {
