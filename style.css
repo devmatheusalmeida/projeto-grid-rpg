@@ -57,6 +57,21 @@ body {
   margin-bottom: 10px;
 }
 
+/* Logo*/
+
+.logo-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+
+.logo {
+    width: 180px;
+    max-width: 100%;
+    height: auto;
+}
+
 .section {
   display: flex;
   flex-direction: column;
