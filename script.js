@@ -38,35 +38,34 @@ player10: { name: "P10", color: "#5352ed", position: null }
 for (let i = 0; i < 400; i++) {
 
 const cell = document.createElement("div");
+cell.classList.add("cell");
+cell.dataset.index = i;
 
-cell.addEventListener("click", () => {
+// permitir drop
+cell.addEventListener("dragover", (e) => {
+e.preventDefault();
+});
 
-const currentPlayer = playerSelect.value;
+cell.addEventListener("drop", (e) => {
 
-// remover player se clicar na mesma posição
-if (players[currentPlayer].position === i) {
-cell.innerHTML = "";
-players[currentPlayer].position = null;
-return;
-}
+e.preventDefault();
+
+const playerKey = e.dataTransfer.getData("player");
+
+const player = players[playerKey];
 
 // remover posição antiga
-if (players[currentPlayer].position !== null) {
+if (player.position !== null) {
 
-const oldCell = grid.children[players[currentPlayer].position];
+const oldCell = grid.children[player.position];
 oldCell.innerHTML = "";
 
 }
 
-players[currentPlayer].position = i;
+player.position = i;
 
-const token = document.createElement("div");
+const token = createToken(playerKey);
 
-token.classList.add("token");
-token.textContent = players[currentPlayer].name;
-token.style.backgroundColor = players[currentPlayer].color;
-
-cell.innerHTML = "";
 cell.appendChild(token);
 
 });
@@ -75,20 +74,70 @@ grid.appendChild(cell);
 
 }
 
+function createToken(playerKey){
+
+const player = players[playerKey];
+
+const token = document.createElement("div");
+
+token.classList.add("token");
+
+token.textContent = player.name;
+
+token.style.backgroundColor = player.color;
+
+token.setAttribute("draggable", true);
+
+token.addEventListener("dragstart", (e)=>{
+
+e.dataTransfer.setData("player", playerKey);
+
+});
+
+return token;
+
+}
+
+grid.addEventListener("click",(e)=>{
+
+const cell = e.target.closest(".cell");
+
+if(!cell) return;
+
+const playerKey = playerSelect.value;
+
+const player = players[playerKey];
+
+const index = Number(cell.dataset.index);
+
+// remover posição antiga
+if(player.position !== null){
+
+grid.children[player.position].innerHTML="";
+
+}
+
+player.position = index;
+
+const token = createToken(playerKey);
+
+cell.innerHTML="";
+cell.appendChild(token);
+
+});
+
 // =========================
-// SISTEMA DE MAPAS
+// MAPAS
 // =========================
 
 const maps = {
-
 floresta: "assets/maps/floresta.jpg",
 dungeon: "assets/maps/dungeon.jpg",
 cidade: "assets/maps/cidade.jpg"
-
 };
 
 // =========================
-// SISTEMA DE SOM AMBIENTE
+// SONS
 // =========================
 
 const sounds = {
@@ -117,34 +166,27 @@ let currentAudio = null;
 let currentSoundFile = null;
 
 // =========================
-// SISTEMA DE CLIMA
+// CLIMA
 // =========================
 
 const weatherSounds = {
-
 rain: "assets/sounds/weather/rain.mp3",
 storm: "assets/sounds/weather/storm.mp3",
 snow: "assets/sounds/weather/snow.mp3",
 sandstorm: "assets/sounds/weather/sandstorm.mp3",
 wind: "assets/sounds/weather/wind.mp3"
-
 };
 
 let currentWeatherAudio = null;
 
 // =========================
-// CONTROLE DE VOLUME
+// VOLUME
 // =========================
 
 volumeControl.addEventListener("input", () => {
 
-if (currentAudio) {
-currentAudio.volume = volumeControl.value;
-}
-
-if (currentWeatherAudio) {
-currentWeatherAudio.volume = volumeControl.value;
-}
+if (currentAudio) currentAudio.volume = volumeControl.value;
+if (currentWeatherAudio) currentWeatherAudio.volume = volumeControl.value;
 
 });
 
@@ -172,7 +214,6 @@ currentAudio.currentTime = 0;
 }
 
 currentAudio = new Audio(soundFile);
-
 currentAudio.loop = true;
 currentAudio.volume = volumeControl.value;
 
@@ -201,19 +242,15 @@ if (currentWeatherAudio) currentWeatherAudio.pause();
 });
 
 // =========================
-// CONTROLE DO SIDEBAR
+// SIDEBAR
 // =========================
 
 toggleBtn.addEventListener("click", () => {
-
 document.body.classList.add("hidden-sidebar");
-
 });
 
 showSidebarBtn.addEventListener("click", () => {
-
 document.body.classList.remove("hidden-sidebar");
-
 });
 
 // =========================
@@ -227,7 +264,6 @@ const initiativeList = document.getElementById("initiativeList");
 const nextTurnBtn = document.getElementById("nextTurn");
 
 let initiativeOrder = [];
-let currentTurn = 0;
 
 addInitiativeBtn.addEventListener("click", () => {
 
@@ -251,13 +287,9 @@ function renderInitiative() {
 
 initiativeList.innerHTML = "";
 
-initiativeOrder.forEach((char, index) => {
+initiativeOrder.forEach((char) => {
 
 const li = document.createElement("li");
-
-if (index === currentTurn) {
-li.style.background = "#6b46c1";
-}
 
 li.textContent = `${char.name} - ${char.value}`;
 
@@ -265,24 +297,66 @@ initiativeList.appendChild(li);
 
 });
 
+enableDrag();
+
 }
 
 nextTurnBtn.addEventListener("click", () => {
 
-if (initiativeOrder.length === 0) return;
+const confirmReset = confirm("Deseja iniciar nova rodada de iniciativa?");
 
-currentTurn++;
+if (!confirmReset) return;
 
-if (currentTurn >= initiativeOrder.length) {
-currentTurn = 0;
-}
+initiativeOrder = [];
+initiativeList.innerHTML = "";
 
-renderInitiative();
+initiativeName.value = "";
+initiativeValue.value = "";
 
 });
 
 // =========================
-// SISTEMA DE CLIMA
+// DRAG AND DROP
+// =========================
+
+let sortableInstance = null;
+
+function enableDrag() {
+
+if (sortableInstance) {
+sortableInstance.destroy();
+}
+
+sortableInstance = new Sortable(initiativeList, {
+
+animation: 150,
+ghostClass: "dragging",
+
+onEnd: function () {
+
+const newOrder = [];
+
+document.querySelectorAll("#initiativeList li").forEach((li) => {
+
+const text = li.textContent.split(" - ");
+
+newOrder.push({
+name: text[0],
+value: Number(text[1])
+});
+
+});
+
+initiativeOrder = newOrder;
+
+}
+
+});
+
+}
+
+// =========================
+// CLIMA
 // =========================
 
 weatherSelect.addEventListener("change", updateWeather);
