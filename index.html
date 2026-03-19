@@ -1,137 +1,174 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <title>ArcaneBoard</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
 
-<head>
-<meta charset="UTF-8">
-<title>ArcaneBoard</title>
-<link rel="stylesheet" href="style.css">
-</head>
+  <body>
+    <button id="showSidebarBtn">☰</button>
 
-<body>
+    <div class="container">
+      <!-- SIDEBAR -->
+      <div class="sidebar">
+        <div class="logo-container">
+          <img
+            src="assets/image/logo.png"
+            alt="ArcaneBoard Logo"
+            class="logo"
+          />
+        </div>
 
-<button id="showSidebarBtn">☰</button>
+        <!--BTN DE OCULTAR PAINEL-->
+        <button id="toggleSidebar">Ocultar painel</button>
 
-<div class="container">
+        <!---FICHA DE PERSONAGEM-->
+        <a
+          href="assets/pdf/ficha_personagem_editavel.pdf"
+          target="_blank"
+          class="sheet-button"
+        >
+          📜 Criar Ficha
+        </a>
 
-<!-- SIDEBAR -->
-<div class="sidebar">
+        <div class="sidebar-divider">🎲 DADOS</div>
 
-<div class="logo-container">
-    <img src="assets/image/logo.png" alt="ArcaneBoard Logo" class="logo">
-</div>
+        <div class="section">
+          <label>Tipo de dado</label>
+          <select id="diceType">
+            <option value="4">d4</option>
+            <option value="6">d6</option>
+            <option value="8">d8</option>
+            <option value="10">d10</option>
+            <option value="12">d12</option>
+            <option value="20" selected>d20</option>
+          </select>
+        </div>
 
-<!--BTN DE OCULTAR PAINEL-->
-<button id="toggleSidebar">Ocultar painel</button>
+        <div class="section">
+          <label>Bônus</label>
+          <input type="number" id="diceBonus" value="0" />
+        </div>
 
-<!---FICHA DE PERSONAGEM-->
-<a href="assets/pdf/ficha_personagem_editavel.pdf" target="_blank" class="sheet-button">
-    📜 Criar Ficha
-</a>
+        <div class="section">
+          <button id="rollDiceBtn">Rolar dado</button>
+        </div>
 
-<!-- PLAYERS -->
-<div class="sidebar-divider">🧙 PLAYERS</div>
+        <div class="section">
+          <div id="diceResult">Resultado: --</div>
+        </div>
 
-<div class="section">
-<label>Selecionar Player</label>
-<select id="playerSelect">
+        <div class="section">
+          <ul id="diceHistory"></ul>
+        </div>
 
-<option value="player1">Player 1</option>
-<option value="player2">Player 2</option>
-<option value="player3">Player 3</option>
-<option value="player4">Player 4</option>
-<option value="player5">Player 5</option>
-<option value="player6">Player 6</option>
-<option value="player7">Player 7</option>
-<option value="player8">Player 8</option>
-<option value="player9">Player 9</option>
-<option value="player10">Player 10</option>
+        <!-- PLAYERS -->
+        <div class="sidebar-divider">🧙 PLAYERS</div>
 
-</select>
-</div>
+        <div class="section">
+          <label>Selecionar Player</label>
+          <select id="playerSelect">
+            <option value="player1">Player 1</option>
+            <option value="player2">Player 2</option>
+            <option value="player3">Player 3</option>
+            <option value="player4">Player 4</option>
+            <option value="player5">Player 5</option>
+            <option value="player6">Player 6</option>
+            <option value="player7">Player 7</option>
+            <option value="player8">Player 8</option>
+            <option value="player9">Player 9</option>
+            <option value="player10">Player 10</option>
+          </select>
+        </div>
 
-<!-- INICIATIVA -->
-<div class="sidebar-divider">⚔ INICIATIVA</div>
+        <!-- INICIATIVA -->
+        <div class="sidebar-divider">⚔ INICIATIVA</div>
 
-<div class="section">
-<label>Nome</label>
-<input type="text" id="initiativeName" placeholder="Ex: Guerreiro">
-</div>
+        <div class="section">
+          <label>Nome</label>
+          <input type="text" id="initiativeName" placeholder="Ex: Guerreiro" />
+        </div>
 
-<div class="section">
-<label>Resultado do dado</label>
-<input type="number" id="initiativeValue" placeholder="Ex: 17">
-</div>
+        <div class="section">
+          <label>Resultado do dado</label>
+          <input type="number" id="initiativeValue" placeholder="Ex: 17" />
+        </div>
 
-<div class="section">
-<button id="addInitiative">Adicionar</button>
-</div>
+        <div class="section">
+          <button id="addInitiative">Adicionar</button>
+        </div>
 
-<div class="section">
-<ul id="initiativeList"></ul>
-</div>
+        <div class="section">
+          <ul id="initiativeList"></ul>
+        </div>
 
-<div class="section">
-<button id="nextTurn">🔄 Nova Rodada</button>
-</div>
+        <div class="section">
+          <button id="nextTurn">🔄 Nova Rodada</button>
+        </div>
 
-<!-- MAPA -->
-<div class="sidebar-divider">🗺 MAPA</div>
+        <!-- MAPA -->
+        <div class="sidebar-divider">🗺 MAPA</div>
 
-<div class="section">
-<label>Terreno</label>
-<select id="terrainSelect">
-<option value="floresta">Floresta</option>
-<option value="dungeon">Dungeon</option>
-<option value="cidade">Cidade</option>
-</select>
-</div>
+        <div class="section">
+          <label>Terreno</label>
+          <select id="terrainSelect">
+            <option value="floresta">Floresta</option>
+            <option value="dungeon">Dungeon</option>
+            <option value="cidade">Cidade</option>
+          </select>
+        </div>
 
-<div class="section">
-<label>Momento</label>
-<select id="moodSelect">
-<option value="calmo">Calmo</option>
-<option value="tenso">Tenso</option>
-<option value="batalha">Batalha</option>
-</select>
-</div>
+        <div class="section">
+          <label>Momento</label>
+          <select id="moodSelect">
+            <option value="calmo">Calmo</option>
+            <option value="tenso">Tenso</option>
+            <option value="batalha">Batalha</option>
+          </select>
+        </div>
 
-<!-- AUDIO -->
-<div class="sidebar-divider">🎵 ÁUDIO</div>
+        <!-- AUDIO -->
+        <div class="sidebar-divider">🎵 ÁUDIO</div>
 
-<button id="playBtn">Play</button>
-<button id="pauseBtn">Pause</button>
+        <button id="playBtn">Play</button>
+        <button id="pauseBtn">Pause</button>
 
-<div class="section">
-<label>Volume</label>
-<input type="range" id="volumeControl" min="0" max="1" step="0.01" value="0.5">
-</div>
+        <div class="section">
+          <label>Volume</label>
+          <input
+            type="range"
+            id="volumeControl"
+            min="0"
+            max="1"
+            step="0.01"
+            value="0.5"
+          />
+        </div>
 
-<!-- CLIMA -->
-<div class="sidebar-divider">🌧 CLIMA</div>
+        <!-- CLIMA -->
+        <div class="sidebar-divider">🌧 CLIMA</div>
 
-<div class="section">
-<label>Efeito climático</label>
-<select id="weatherSelect">
-<option value="none">Nenhum</option>
-<option value="rain">Chuva</option>
-<option value="storm">Tempestade</option>
-<option value="snow">Nevasca</option>
-<option value="sandstorm">Tempestade de areia</option>
-<option value="wind">Ventania</option>
-</select>
-</div>
+        <div class="section">
+          <label>Efeito climático</label>
+          <select id="weatherSelect">
+            <option value="none">Nenhum</option>
+            <option value="rain">Chuva</option>
+            <option value="storm">Tempestade</option>
+            <option value="snow">Nevasca</option>
+            <option value="sandstorm">Tempestade de areia</option>
+            <option value="wind">Ventania</option>
+          </select>
+        </div>
+      </div>
 
-</div>
+      <!-- MAPA -->
+      <div class="map-area">
+        <div id="grid" class="grid"></div>
+      </div>
+    </div>
 
-<!-- MAPA -->
-<div class="map-area">
-<div id="grid" class="grid"></div>
-</div>
-
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
-<script src="script.js"></script>
-
-</body>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+    <script src="script.js"></script>
+  </body>
 </html>

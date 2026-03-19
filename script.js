@@ -19,111 +19,135 @@ const weatherSelect = document.getElementById("weatherSelect");
 // =========================
 
 const players = {
-player1: { name: "P1", color: "#00ff95", position: null },
-player2: { name: "P2", color: "#ff4757", position: null },
-player3: { name: "P3", color: "#1e90ff", position: null },
-player4: { name: "P4", color: "#ffa502", position: null },
-player5: { name: "P5", color: "#a55eea", position: null },
-player6: { name: "P6", color: "#2ed573", position: null },
-player7: { name: "P7", color: "#ff6b81", position: null },
-player8: { name: "P8", color: "#70a1ff", position: null },
-player9: { name: "P9", color: "#ff9f43", position: null },
-player10: { name: "P10", color: "#5352ed", position: null }
+  player1: { name: "P1", color: "#00ff95", position: null },
+  player2: { name: "P2", color: "#ff4757", position: null },
+  player3: { name: "P3", color: "#1e90ff", position: null },
+  player4: { name: "P4", color: "#ffa502", position: null },
+  player5: { name: "P5", color: "#a55eea", position: null },
+  player6: { name: "P6", color: "#2ed573", position: null },
+  player7: { name: "P7", color: "#ff6b81", position: null },
+  player8: { name: "P8", color: "#70a1ff", position: null },
+  player9: { name: "P9", color: "#ff9f43", position: null },
+  player10: { name: "P10", color: "#5352ed", position: null },
 };
+
+// =========================
+// SISTEMA DE DADOS
+// =========================
+
+const diceType = document.getElementById("diceType");
+const diceBonus = document.getElementById("diceBonus");
+const rollDiceBtn = document.getElementById("rollDiceBtn");
+const diceResult = document.getElementById("diceResult");
+const diceHistory = document.getElementById("diceHistory");
+
+rollDiceBtn.addEventListener("click", () => {
+  const sides = Number(diceType.value);
+  const bonus = Number(diceBonus.value) || 0;
+
+  const roll = Math.floor(Math.random() * sides) + 1;
+  const total = roll + bonus;
+
+  let resultText = `d${sides}: ${roll}`;
+
+  if (bonus !== 0) {
+    resultText += ` ${bonus > 0 ? "+" : "-"} ${Math.abs(bonus)}`;
+  }
+
+  resultText += ` = ${total}`;
+
+  diceResult.textContent = `Resultado: ${resultText}`;
+
+  const li = document.createElement("li");
+  li.textContent = resultText;
+
+  diceHistory.prepend(li);
+
+  // limitar histórico a 10 itens
+  while (diceHistory.children.length > 10) {
+    diceHistory.removeChild(diceHistory.lastChild);
+  }
+});
 
 // =========================
 // CRIAR GRID
 // =========================
 
 for (let i = 0; i < 400; i++) {
+  const cell = document.createElement("div");
+  cell.classList.add("cell");
+  cell.dataset.index = i;
 
-const cell = document.createElement("div");
-cell.classList.add("cell");
-cell.dataset.index = i;
+  // permitir drop
+  cell.addEventListener("dragover", (e) => {
+    e.preventDefault();
+  });
 
-// permitir drop
-cell.addEventListener("dragover", (e) => {
-e.preventDefault();
-});
+  cell.addEventListener("drop", (e) => {
+    e.preventDefault();
 
-cell.addEventListener("drop", (e) => {
+    const playerKey = e.dataTransfer.getData("player");
 
-e.preventDefault();
+    const player = players[playerKey];
 
-const playerKey = e.dataTransfer.getData("player");
+    // remover posição antiga
+    if (player.position !== null) {
+      const oldCell = grid.children[player.position];
+      oldCell.innerHTML = "";
+    }
 
-const player = players[playerKey];
+    player.position = i;
 
-// remover posição antiga
-if (player.position !== null) {
+    const token = createToken(playerKey);
 
-const oldCell = grid.children[player.position];
-oldCell.innerHTML = "";
+    cell.appendChild(token);
+  });
 
+  grid.appendChild(cell);
 }
 
-player.position = i;
+function createToken(playerKey) {
+  const player = players[playerKey];
 
-const token = createToken(playerKey);
+  const token = document.createElement("div");
 
-cell.appendChild(token);
+  token.classList.add("token");
 
-});
+  token.textContent = player.name;
 
-grid.appendChild(cell);
+  token.style.backgroundColor = player.color;
 
+  token.setAttribute("draggable", true);
+
+  token.addEventListener("dragstart", (e) => {
+    e.dataTransfer.setData("player", playerKey);
+  });
+
+  return token;
 }
 
-function createToken(playerKey){
+grid.addEventListener("click", (e) => {
+  const cell = e.target.closest(".cell");
 
-const player = players[playerKey];
+  if (!cell) return;
 
-const token = document.createElement("div");
+  const playerKey = playerSelect.value;
 
-token.classList.add("token");
+  const player = players[playerKey];
 
-token.textContent = player.name;
+  const index = Number(cell.dataset.index);
 
-token.style.backgroundColor = player.color;
+  // remover posição antiga
+  if (player.position !== null) {
+    grid.children[player.position].innerHTML = "";
+  }
 
-token.setAttribute("draggable", true);
+  player.position = index;
 
-token.addEventListener("dragstart", (e)=>{
+  const token = createToken(playerKey);
 
-e.dataTransfer.setData("player", playerKey);
-
-});
-
-return token;
-
-}
-
-grid.addEventListener("click",(e)=>{
-
-const cell = e.target.closest(".cell");
-
-if(!cell) return;
-
-const playerKey = playerSelect.value;
-
-const player = players[playerKey];
-
-const index = Number(cell.dataset.index);
-
-// remover posição antiga
-if(player.position !== null){
-
-grid.children[player.position].innerHTML="";
-
-}
-
-player.position = index;
-
-const token = createToken(playerKey);
-
-cell.innerHTML="";
-cell.appendChild(token);
-
+  cell.innerHTML = "";
+  cell.appendChild(token);
 });
 
 // =========================
@@ -131,9 +155,9 @@ cell.appendChild(token);
 // =========================
 
 const maps = {
-floresta: "assets/maps/floresta.jpg",
-dungeon: "assets/maps/dungeon.jpg",
-cidade: "assets/maps/cidade.jpg"
+  floresta: "assets/maps/floresta.jpg",
+  dungeon: "assets/maps/dungeon.jpg",
+  cidade: "assets/maps/cidade.jpg",
 };
 
 // =========================
@@ -141,25 +165,23 @@ cidade: "assets/maps/cidade.jpg"
 // =========================
 
 const sounds = {
+  floresta: {
+    calmo: "assets/sounds/floresta-calmo.mp3",
+    batalha: "assets/sounds/floresta-batalha.mp3",
+    tenso: "assets/sounds/floresta-tenso.mp3",
+  },
 
-floresta: {
-calmo: "assets/sounds/floresta-calmo.mp3",
-batalha: "assets/sounds/floresta-batalha.mp3",
-tenso: "assets/sounds/floresta-tenso.mp3"
-},
+  dungeon: {
+    calmo: "assets/sounds/dungeon-calmo.mp3",
+    batalha: "assets/sounds/dungeon-batalha.mp3",
+    tenso: "assets/sounds/dungeon-tenso.mp3",
+  },
 
-dungeon: {
-calmo: "assets/sounds/dungeon-calmo.mp3",
-batalha: "assets/sounds/dungeon-batalha.mp3",
-tenso: "assets/sounds/dungeon-tenso.mp3"
-},
-
-cidade: {
-calmo: "assets/sounds/cidade-calmo.mp3",
-batalha: "assets/sounds/cidade-batalha.mp3",
-tenso: "assets/sounds/cidade-tenso.mp3"
-}
-
+  cidade: {
+    calmo: "assets/sounds/cidade-calmo.mp3",
+    batalha: "assets/sounds/cidade-batalha.mp3",
+    tenso: "assets/sounds/cidade-tenso.mp3",
+  },
 };
 
 let currentAudio = null;
@@ -170,11 +192,11 @@ let currentSoundFile = null;
 // =========================
 
 const weatherSounds = {
-rain: "assets/sounds/weather/rain.mp3",
-storm: "assets/sounds/weather/storm.mp3",
-snow: "assets/sounds/weather/snow.mp3",
-sandstorm: "assets/sounds/weather/sandstorm.mp3",
-wind: "assets/sounds/weather/wind.mp3"
+  rain: "assets/sounds/weather/rain.mp3",
+  storm: "assets/sounds/weather/storm.mp3",
+  snow: "assets/sounds/weather/snow.mp3",
+  sandstorm: "assets/sounds/weather/sandstorm.mp3",
+  wind: "assets/sounds/weather/wind.mp3",
 };
 
 let currentWeatherAudio = null;
@@ -184,10 +206,8 @@ let currentWeatherAudio = null;
 // =========================
 
 volumeControl.addEventListener("input", () => {
-
-if (currentAudio) currentAudio.volume = volumeControl.value;
-if (currentWeatherAudio) currentWeatherAudio.volume = volumeControl.value;
-
+  if (currentAudio) currentAudio.volume = volumeControl.value;
+  if (currentWeatherAudio) currentWeatherAudio.volume = volumeControl.value;
 });
 
 // =========================
@@ -198,29 +218,25 @@ terrainSelect.addEventListener("change", updateEnvironment);
 moodSelect.addEventListener("change", updateEnvironment);
 
 function updateEnvironment() {
+  const selectedTerrain = terrainSelect.value;
+  const selectedMood = moodSelect.value;
 
-const selectedTerrain = terrainSelect.value;
-const selectedMood = moodSelect.value;
+  mapArea.style.backgroundImage = `url(${maps[selectedTerrain]})`;
 
-mapArea.style.backgroundImage = `url(${maps[selectedTerrain]})`;
+  const soundFile = sounds[selectedTerrain][selectedMood];
 
-const soundFile = sounds[selectedTerrain][selectedMood];
+  if (currentSoundFile !== soundFile) {
+    if (currentAudio) {
+      currentAudio.pause();
+      currentAudio.currentTime = 0;
+    }
 
-if (currentSoundFile !== soundFile) {
+    currentAudio = new Audio(soundFile);
+    currentAudio.loop = true;
+    currentAudio.volume = volumeControl.value;
 
-if (currentAudio) {
-currentAudio.pause();
-currentAudio.currentTime = 0;
-}
-
-currentAudio = new Audio(soundFile);
-currentAudio.loop = true;
-currentAudio.volume = volumeControl.value;
-
-currentSoundFile = soundFile;
-
-}
-
+    currentSoundFile = soundFile;
+  }
 }
 
 // =========================
@@ -228,17 +244,13 @@ currentSoundFile = soundFile;
 // =========================
 
 playBtn.addEventListener("click", () => {
-
-if (currentAudio) currentAudio.play();
-if (currentWeatherAudio) currentWeatherAudio.play();
-
+  if (currentAudio) currentAudio.play();
+  if (currentWeatherAudio) currentWeatherAudio.play();
 });
 
 pauseBtn.addEventListener("click", () => {
-
-if (currentAudio) currentAudio.pause();
-if (currentWeatherAudio) currentWeatherAudio.pause();
-
+  if (currentAudio) currentAudio.pause();
+  if (currentWeatherAudio) currentWeatherAudio.pause();
 });
 
 // =========================
@@ -246,11 +258,11 @@ if (currentWeatherAudio) currentWeatherAudio.pause();
 // =========================
 
 toggleBtn.addEventListener("click", () => {
-document.body.classList.add("hidden-sidebar");
+  document.body.classList.add("hidden-sidebar");
 });
 
 showSidebarBtn.addEventListener("click", () => {
-document.body.classList.remove("hidden-sidebar");
+  document.body.classList.remove("hidden-sidebar");
 });
 
 // =========================
@@ -266,53 +278,45 @@ const nextTurnBtn = document.getElementById("nextTurn");
 let initiativeOrder = [];
 
 addInitiativeBtn.addEventListener("click", () => {
+  const name = initiativeName.value;
+  const value = Number(initiativeValue.value);
 
-const name = initiativeName.value;
-const value = Number(initiativeValue.value);
+  if (!name || !value) return;
 
-if (!name || !value) return;
+  initiativeOrder.push({ name, value });
 
-initiativeOrder.push({ name, value });
+  initiativeOrder.sort((a, b) => b.value - a.value);
 
-initiativeOrder.sort((a, b) => b.value - a.value);
+  renderInitiative();
 
-renderInitiative();
-
-initiativeName.value = "";
-initiativeValue.value = "";
-
+  initiativeName.value = "";
+  initiativeValue.value = "";
 });
 
 function renderInitiative() {
+  initiativeList.innerHTML = "";
 
-initiativeList.innerHTML = "";
+  initiativeOrder.forEach((char) => {
+    const li = document.createElement("li");
 
-initiativeOrder.forEach((char) => {
+    li.textContent = `${char.name} - ${char.value}`;
 
-const li = document.createElement("li");
+    initiativeList.appendChild(li);
+  });
 
-li.textContent = `${char.name} - ${char.value}`;
-
-initiativeList.appendChild(li);
-
-});
-
-enableDrag();
-
+  enableDrag();
 }
 
 nextTurnBtn.addEventListener("click", () => {
+  const confirmReset = confirm("Deseja iniciar nova rodada de iniciativa?");
 
-const confirmReset = confirm("Deseja iniciar nova rodada de iniciativa?");
+  if (!confirmReset) return;
 
-if (!confirmReset) return;
+  initiativeOrder = [];
+  initiativeList.innerHTML = "";
 
-initiativeOrder = [];
-initiativeList.innerHTML = "";
-
-initiativeName.value = "";
-initiativeValue.value = "";
-
+  initiativeName.value = "";
+  initiativeValue.value = "";
 });
 
 // =========================
@@ -322,37 +326,29 @@ initiativeValue.value = "";
 let sortableInstance = null;
 
 function enableDrag() {
+  if (sortableInstance) {
+    sortableInstance.destroy();
+  }
 
-if (sortableInstance) {
-sortableInstance.destroy();
-}
+  sortableInstance = new Sortable(initiativeList, {
+    animation: 150,
+    ghostClass: "dragging",
 
-sortableInstance = new Sortable(initiativeList, {
+    onEnd: function () {
+      const newOrder = [];
 
-animation: 150,
-ghostClass: "dragging",
+      document.querySelectorAll("#initiativeList li").forEach((li) => {
+        const text = li.textContent.split(" - ");
 
-onEnd: function () {
+        newOrder.push({
+          name: text[0],
+          value: Number(text[1]),
+        });
+      });
 
-const newOrder = [];
-
-document.querySelectorAll("#initiativeList li").forEach((li) => {
-
-const text = li.textContent.split(" - ");
-
-newOrder.push({
-name: text[0],
-value: Number(text[1])
-});
-
-});
-
-initiativeOrder = newOrder;
-
-}
-
-});
-
+      initiativeOrder = newOrder;
+    },
+  });
 }
 
 // =========================
@@ -362,30 +358,24 @@ initiativeOrder = newOrder;
 weatherSelect.addEventListener("change", updateWeather);
 
 function updateWeather() {
+  const selectedWeather = weatherSelect.value;
 
-const selectedWeather = weatherSelect.value;
+  if (currentWeatherAudio) {
+    currentWeatherAudio.pause();
+    currentWeatherAudio.currentTime = 0;
+  }
 
-if (currentWeatherAudio) {
+  if (selectedWeather === "none") {
+    currentWeatherAudio = null;
+    return;
+  }
 
-currentWeatherAudio.pause();
-currentWeatherAudio.currentTime = 0;
+  currentWeatherAudio = new Audio(weatherSounds[selectedWeather]);
 
-}
+  currentWeatherAudio.loop = true;
+  currentWeatherAudio.volume = volumeControl.value;
 
-if (selectedWeather === "none") {
-
-currentWeatherAudio = null;
-return;
-
-}
-
-currentWeatherAudio = new Audio(weatherSounds[selectedWeather]);
-
-currentWeatherAudio.loop = true;
-currentWeatherAudio.volume = volumeControl.value;
-
-currentWeatherAudio.play();
-
+  currentWeatherAudio.play();
 }
 
 // =========================

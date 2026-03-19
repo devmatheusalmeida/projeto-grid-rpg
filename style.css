@@ -2,7 +2,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Segoe UI', sans-serif;
+  font-family: "Segoe UI", sans-serif;
 }
 
 body {
@@ -60,18 +60,18 @@ body {
 /* Logo*/
 
 .logo-container {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    margin-bottom: 10px;
-    border-bottom: 1px solid #2c2c3a;
-    padding-bottom: 10px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #2c2c3a;
+  padding-bottom: 10px;
 }
 
 .logo {
-    width: 180px;
-    max-width: 100%;
-    height: auto;
+  width: 180px;
+  max-width: 100%;
+  height: auto;
 }
 
 .section {
@@ -114,6 +114,29 @@ button {
 
 button:hover {
   background-color: #553c9a;
+}
+
+/*dados*/
+
+#diceResult {
+  background: #1e1e1e;
+  padding: 10px;
+  border-radius: 6px;
+  text-align: center;
+  font-weight: bold;
+}
+
+#diceHistory {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+#diceHistory li {
+  background: #1e1e1e;
+  padding: 6px;
+  margin-bottom: 4px;
+  border-radius: 4px;
 }
 
 /* Área do mapa */
@@ -181,15 +204,15 @@ input[type="range"] {
 }
 
 #initiativeList {
-    list-style: none;
-    padding: 0;
+  list-style: none;
+  padding: 0;
 }
 
 #initiativeList li {
-    background: #1e1e1e;
-    padding: 6px;
-    margin-bottom: 4px;
-    border-radius: 4px;
+  background: #1e1e1e;
+  padding: 6px;
+  margin-bottom: 4px;
+  border-radius: 4px;
 }
 
 /* Botão que aparece quando sidebar está escondido */
@@ -221,40 +244,40 @@ input[type="range"] {
 }
 
 .sheet-button {
-    display: block;
-    background: linear-gradient(145deg, #3a3a55, #1f1f2e);
-    color: white;
-    text-align: center;
-    padding: 12px;
-    margin: 10px;
-    border-radius: 8px;
-    text-decoration: none;
-    font-weight: bold;
-    transition: all 0.2s ease;
-    border: 1px solid #555;
+  display: block;
+  background: linear-gradient(145deg, #3a3a55, #1f1f2e);
+  color: white;
+  text-align: center;
+  padding: 12px;
+  margin: 10px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: all 0.2s ease;
+  border: 1px solid #555;
 }
 
 .sheet-button:hover {
-    background: linear-gradient(145deg, #4a4a6a, #2c2c40);
-    transform: scale(1.05);
+  background: linear-gradient(145deg, #4a4a6a, #2c2c40);
+  transform: scale(1.05);
 }
 
-.cell{
-position:relative;
+.cell {
+  position: relative;
 }
 
-.token{
-width:90%;
-height:90%;
-display:flex;
-align-items:center;
-justify-content:center;
-font-weight:bold;
-color:white;
-border-radius:50%;
-cursor:grab;
+.token {
+  width: 90%;
+  height: 90%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: white;
+  border-radius: 50%;
+  cursor: grab;
 }
 
-.token:active{
-cursor:grabbing;
+.token:active {
+  cursor: grabbing;
 }
